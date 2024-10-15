@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'todo_list.dart';
 
 // 状態を持つウィジェットを定義しているコード
 class TodoCreateScreen extends StatefulWidget {
@@ -12,9 +11,6 @@ class _TodoCreateState extends State<TodoCreateScreen> {
   // TextEditingControllerは、TextFieldやTextFormFieldのテキスト入力内容を管理し、その内容にアクセスしたり、プログラムからテキストを設定したり、変更の検出をしたりするために使用される
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
-
-  // todoを格納するListを設定
-  List<Map<String, String>> _todos = [];
 
   @override
   Widget build(BuildContext context) {
@@ -45,22 +41,14 @@ class _TodoCreateState extends State<TodoCreateScreen> {
             SizedBox(height: 32),
             ElevatedButton(
                 onPressed: () {
-                  // Todoリストに新しいTodoを追加
-                  setState(() {
-                    _todos.add({
-                      'title': _titleController.text,
-                      'content': _contentController.text,
-                    });
-                  });
-                  // todo_list.dartにデータを渡しながら推移
-                  // Navigator.pushは、現在の画面から新しい画面に推移する
-                  Navigator.push(
-                    context,
-                    // Material Designに準拠した画面推移
-                    MaterialPageRoute(
-                      builder: (context) => TodoListScreen(todos: _todos),
-                    ),
-                  );
+                  // 新しいTodoを作成して戻り値として返す
+                  final newTodo = {
+                    'title': _titleController.text,
+                    'content': _contentController.text,
+                  };
+
+                  // Todoをリストとして追加して前の画面に戻る
+                  Navigator.pop(context, newTodo);
                 },
                 child: Text('リスト追加')),
             SizedBox(height: 32),

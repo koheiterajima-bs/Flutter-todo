@@ -41,6 +41,8 @@ class MyHomePage extends StatefulWidget {
 
 // MyHomePageウィジェットに対応する状態を定義している
 class _MyHomePageState extends State<MyHomePage> {
+  List<Map<String, String>> _todos = []; // Todoリストをここで管理
+
   @override
   // contextは、Flutterウィジェットツリー内でのウィジェットの位置や親子関係、テーマなどの情報を持つ重要なオブジェクト
   Widget build(BuildContext context) {
@@ -62,14 +64,45 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             ElevatedButton(
-                onPressed: () {
-                  // ボタンが押されると、todo_create.dartに飛ぶ
-                  Navigator.push(
+                onPressed: () async {
+                  // TodoCreateScreenに移動し、戻ってきた時に新しいTodoが追加されているか確認
+                  final newTodo = await Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => TodoCreateScreen()),
                   );
+                  // 戻ってきた時に新しいTodoをリストに追加
+                  if (newTodo != null) {
+                    setState(() {
+                      _todos.add(newTodo);
+                    });
+                  }
                 },
                 child: Text('Todoを作成する')),
+            SizedBox(height: 32),
+            Text(
+              'Todo一覧',
+              style: TextStyle(
+                fontSize: 24.0,
+                color: Colors.red,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  // Todoリストを表示
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TodoListScreen(
+                            todos: _todos,
+                            onDelete: (index) {
+                              setState(() {
+                                _todos.removeAt(index);
+                              });
+                            })),
+                  );
+                },
+                child: Text('Todoリストを見る')),
           ],
         ),
       ),
