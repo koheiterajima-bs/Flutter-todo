@@ -60,24 +60,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   );
                 },
                 child: Text('Todoを作成する')),
-            SizedBox(height: 32),
-            Text(
-              'Todo一覧',
-              style: TextStyle(
-                fontSize: 24.0,
-                color: Colors.red,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            ElevatedButton(
-                onPressed: () {
-                  // ボタンが押されると、todo_list.dartに飛ぶ
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => TodoListScreen()),
-                  );
-                },
-                child: Text('Todo一覧を見る')),
           ],
         ),
       ),

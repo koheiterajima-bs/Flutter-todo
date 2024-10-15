@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'todo_list.dart';
 
 class TodoCreateScreen extends StatefulWidget {
   @override
@@ -6,35 +7,10 @@ class TodoCreateScreen extends StatefulWidget {
 }
 
 class _TodoCreateState extends State<TodoCreateScreen> {
-  // TextEditingControllerを使って、TextFieldに入力された内容を取得する
-  // タイトル用のコントローラー
   final TextEditingController _titleController = TextEditingController();
-
-  // 内容用のコントローラー
   final TextEditingController _contentController = TextEditingController();
 
-  // リアルタイムで更新されるTodo
-  String _title = '';
-  String _content = '';
-
-  @override
-  void initState() {
-    super.initState();
-
-    // タイトル用のリスナー
-    _titleController.addListener(() {
-      setState(() {
-        _title = _titleController.text;
-      });
-    });
-
-    // 内容用のリスナー
-    _contentController.addListener(() {
-      setState(() {
-        _content = _contentController.text;
-      });
-    });
-  }
+  List<Map<String, String>> _todos = [];
 
   @override
   Widget build(BuildContext context) {
@@ -57,40 +33,40 @@ class _TodoCreateState extends State<TodoCreateScreen> {
             SizedBox(height: 32),
             TextField(
               controller: _contentController,
-              maxLines: null,
               decoration: InputDecoration(
                 labelText: 'Todoの内容',
                 border: OutlineInputBorder(),
               ),
             ),
             SizedBox(height: 32),
-            // リアルタイムで更新されるTodoのプレビュー
-            Text('現在のTodoのプレビュー:'),
-            Text('タイトル: $_title'),
-            Text('内容: $_content'),
-            // ElevatedButton(
-            //     onPressed: () {
-            //       // ボタンが押されると、Todoとしてtodo_list.dartに追加される
-
-            //       // タイトルと内容をまとめたTodoデータを返す
-            //       final todo = {
-            //         'title': _titleController.text,
-            //         'content': _contentController.text
-            //       };
-            //       Navigator.pop(context, todo); // todo_list.dartにデータを渡す
-            //     },
-            //     child: Text('Todoを登録する')),
+            ElevatedButton(
+                onPressed: () {
+                  // Todoリストに新しいTodoを追加
+                  setState(() {
+                    _todos.add({
+                      'title': _titleController.text,
+                      'content': _contentController.text,
+                    });
+                  });
+                  // todo_list.dartにデータを渡しながら推移
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TodoListScreen(todos: _todos),
+                    ),
+                  );
+                },
+                child: Text('リスト追加')),
+            SizedBox(height: 32),
+            ElevatedButton(
+                onPressed: () {
+                  // "pop"で前の画面に戻る
+                  Navigator.of(context).pop();
+                },
+                child: Text('キャンセル')),
           ],
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    // コントローラーの破棄
-    _titleController.dispose();
-    _contentController.dispose();
-    super.dispose();
   }
 }
